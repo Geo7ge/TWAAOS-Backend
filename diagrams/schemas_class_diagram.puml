@@ -1,0 +1,187 @@
+@startuml Class Diagram - Pydantic Schemas
+
+package "User Management" {
+    class UserBase {
+        +email: EmailStr
+        +name: str
+        +role: str = "student"
+    }
+
+    class UserCreate {
+        +password: str
+    }
+
+    class UserResponse {
+        +id: int
+        +created_at: datetime
+    }
+
+    class UserLogin {
+        +email: EmailStr
+        +password: str
+    }
+
+    class Token {
+        +access_token: str
+        +token_type: str
+        +user_id: int
+        +email: EmailStr
+        +role: str | None
+        +name: str
+    }
+
+    UserBase <|-- UserCreate
+    UserBase <|-- UserResponse
+    UserBase <|-- UserLogin
+}
+
+package "Events" {
+    class EventBase {
+        +title: str
+        +description: Optional[str]
+        +start_time: Optional[datetime]
+        +end_time: Optional[datetime]
+        +location_id: Optional[int]
+        +category_name: Optional[str]
+        +organizer_id: Optional[int]
+        +participation_type: Optional[str]
+        +registration_link: Optional[str]
+        +qr_code: Optional[str]
+        +max_participants: Optional[int]
+        +deadline: Optional[datetime]
+    }
+
+    class EventCreate
+    class EventUpdate
+    class EventResponse {
+        +id: int
+    }
+
+    EventBase <|-- EventCreate
+    EventBase <|-- EventUpdate
+    EventBase <|-- EventResponse
+}
+
+package "Locations" {
+    class LocationBase {
+        +name: str
+        +address: str
+        +city: str
+    }
+
+    class LocationCreate
+    class LocationUpdate
+    class LocationResponse {
+        +id: int
+        +created_at: datetime | None
+    }
+
+    LocationBase <|-- LocationCreate
+    LocationBase <|-- LocationUpdate
+    LocationBase <|-- LocationResponse
+}
+
+package "Sponsors" {
+    class SponsorBase {
+        +name: str
+        +logo_url: str
+    }
+
+    class SponsorCreate
+    class SponsorUpdate
+    class SponsorResponse {
+        +id: int
+    }
+
+    SponsorBase <|-- SponsorCreate
+    SponsorBase <|-- SponsorUpdate
+    SponsorBase <|-- SponsorResponse
+}
+
+package "Registration" {
+    class RegistrationBase {
+        +user_id: int
+        +event_id: int
+        +status: str = "pending"
+    }
+
+    class RegistrationCreate
+    class RegistrationUpdate
+    class RegistrationResponse {
+        +id: int
+        +created_at: datetime | None
+    }
+
+    RegistrationBase <|-- RegistrationCreate
+    RegistrationBase <|-- RegistrationUpdate
+    RegistrationBase <|-- RegistrationResponse
+}
+
+package "Event-Sponsor Relations" {
+    class EventSponsorBase {
+        +event_id: int
+        +sponsor_id: int
+    }
+
+    class EventSponsorCreate
+    class EventSponsorUpdate
+    class EventSponsorResponse {
+        +id: int
+    }
+
+    EventSponsorBase <|-- EventSponsorCreate
+    EventSponsorBase <|-- EventSponsorUpdate
+    EventSponsorBase <|-- EventSponsorResponse
+}
+
+package "Feedback & Notifications" {
+    class FeedbackBase {
+        +user_id: int
+        +event_id: int
+        +rating: int
+        +comment: Optional[str]
+    }
+
+    class NotificationBase {
+        +user_id: int
+        +title: str
+        +message: str
+        +type: str
+        +is_read: bool = False
+    }
+}
+
+package "Files" {
+    class FileBase {
+        +filename: str
+        +file_path: str
+        +file_type: str
+        +event_id: Optional[int]
+    }
+
+    class FileCreate
+    class FileUpdate
+    class FileResponse {
+        +id: int
+        +uploaded_at: datetime
+    }
+
+    FileBase <|-- FileCreate
+    FileBase <|-- FileUpdate
+    FileBase <|-- FileResponse
+}
+
+' Relationships
+UserResponse "1" -- "*" RegistrationBase : organizes >
+EventResponse "1" -- "*" RegistrationBase : has registrations >
+LocationResponse "1" -- "*" EventBase : hosts >
+UserResponse "1" -- "*" EventBase : organizes >
+EventResponse "*" -- "*" SponsorResponse : sponsored by >
+EventSponsorBase .. EventResponse
+EventSponsorBase .. SponsorResponse
+UserResponse "1" -- "*" FeedbackBase : gives >
+EventResponse "1" -- "*" FeedbackBase : receives >
+UserResponse "1" -- "*" NotificationBase : receives >
+EventResponse "1" -- "*" FileBase : contains >
+
+@enduml

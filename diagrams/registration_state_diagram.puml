@@ -1,0 +1,42 @@
+@startuml State Diagram - Registration States
+
+[*] --> Pending : User registers for event
+
+Pending --> Approved : Organizer approves
+Pending --> Rejected : Organizer rejects
+Pending --> Cancelled : User cancels
+
+Approved --> Attended : Event date passed
+Approved --> NoShow : Event date passed\nwithout check-in
+
+Rejected --> [*] : Final state
+Cancelled --> [*] : Final state
+Attended --> [*] : Final state
+NoShow --> [*] : Final state
+
+note right of Pending
+    Initial state after
+    registration creation
+end note
+
+note right of Approved
+    User can participate
+    in the event
+end note
+
+note right of Rejected
+    Registration denied
+    by organizer
+end note
+
+note right of Attended
+    User participated
+    successfully
+end note
+
+note right of NoShow
+    User registered but
+    didn't attend
+end note
+
+@enduml

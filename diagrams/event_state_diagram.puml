@@ -1,0 +1,53 @@
+@startuml State Diagram - Event States
+
+[*] --> Draft : Event created by organizer
+
+Draft --> Published : Organizer publishes event
+Draft --> Cancelled : Organizer cancels event
+
+Published --> RegistrationOpen : Registration deadline not passed
+Published --> RegistrationClosed : Registration deadline passed
+
+RegistrationOpen --> Ongoing : Event start time reached
+RegistrationOpen --> Cancelled : Organizer cancels
+
+RegistrationClosed --> Ongoing : Event start time reached
+RegistrationClosed --> Cancelled : Organizer cancels
+
+Ongoing --> Completed : Event end time reached
+Ongoing --> Cancelled : Emergency cancellation
+
+Completed --> [*] : Final state
+Cancelled --> [*] : Final state
+
+note right of Draft
+    Event is being prepared,
+    not visible to students
+end note
+
+note right of Published
+    Event is visible and
+    students can see it
+end note
+
+note right of RegistrationOpen
+    Students can register
+    for the event
+end note
+
+note right of RegistrationClosed
+    No more registrations
+    accepted
+end note
+
+note right of Ongoing
+    Event is currently
+    happening
+end note
+
+note right of Completed
+    Event finished
+    successfully
+end note
+
+@enduml

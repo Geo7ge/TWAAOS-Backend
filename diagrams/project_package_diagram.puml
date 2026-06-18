@@ -1,0 +1,102 @@
+@startuml Package Diagram - Project Structure
+
+package "Backend API" {
+    package "Core" {
+        [main.py] as main
+        [config.py] as config
+        [auth.py] as auth
+    }
+
+    package "API Layer" {
+        package "Routes" as routes {
+            [user_routes.py]
+            [events_routes.py]
+            [locations_routes.py]
+            [sponsors_routes.py]
+            [registration_routes.py]
+            [feedback_routes.py]
+            [notification_routes.py]
+            [file_routes.py]
+            [event_sponsor_routes.py]
+        }
+
+        package "Schemas" as schemas {
+            [user.py]
+            [events.py]
+            [locations.py]
+            [sponsors.py]
+            [registration.py]
+            [feedback.py]
+            [notification.py]
+            [file.py]
+            [event_sponsor.py]
+        }
+    }
+
+    package "Business Logic" {
+        package "Services" as services {
+            [user_service.py]
+            [events_service.py]
+            [locations_service.py]
+            [sponsors_service.py]
+            [registration_service.py]
+            [feedback_service.py]
+            [notification_service.py]
+            [file_service.py]
+            [event_sponsor_service.py]
+        }
+    }
+
+    package "Database" {
+        package "Migrations" as migrations {
+            [migrations.py]
+            [MIGRATIONS.md]
+        }
+
+        package "Supabase Config" as supabase {
+            [config.toml]
+        }
+    }
+
+    package "Documentation" {
+        [docs/]
+        [README.md]
+        [STRUCTURE.md]
+    }
+
+    package "Testing" {
+        [tests/]
+    }
+}
+
+package "External Dependencies" {
+    [FastAPI]
+    [Pydantic]
+    [Supabase]
+    [Uvicorn]
+    [JWT]
+    [bcrypt]
+}
+
+' Relationships
+main --> routes
+main --> config
+main --> auth
+
+routes --> services
+routes --> schemas
+
+services --> schemas
+services --> auth
+services --> config
+
+services --> "Supabase"
+"Supabase" --> migrations
+
+"FastAPI" --> main
+"Pydantic" --> schemas
+"Supabase" --> services
+"JWT" --> auth
+"bcrypt" --> auth
+
+@enduml

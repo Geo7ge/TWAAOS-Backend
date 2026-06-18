@@ -1,0 +1,100 @@
+@startuml Component Diagram - Application Architecture
+
+package "FastAPI Application" {
+    [main.py] as main
+    [config.py] as config
+    [auth.py] as auth
+}
+
+package "Routes Layer" {
+    [user_routes.py] as user_routes
+    [events_routes.py] as events_routes
+    [locations_routes.py] as locations_routes
+    [sponsors_routes.py] as sponsors_routes
+    [registration_routes.py] as registration_routes
+    [feedback_routes.py] as feedback_routes
+    [notification_routes.py] as notification_routes
+    [file_routes.py] as file_routes
+    [event_sponsor_routes.py] as event_sponsor_routes
+}
+
+package "Services Layer" {
+    [user_service.py] as user_service
+    [events_service.py] as events_service
+    [locations_service.py] as locations_service
+    [sponsors_service.py] as sponsors_service
+    [registration_service.py] as registration_service
+    [feedback_service.py] as feedback_service
+    [notification_service.py] as notification_service
+    [file_service.py] as file_service
+    [event_sponsor_service.py] as event_sponsor_service
+}
+
+package "Schemas Layer" {
+    [user.py] as user_schema
+    [events.py] as events_schema
+    [locations.py] as locations_schema
+    [sponsors.py] as sponsors_schema
+    [registration.py] as registration_schema
+    [feedback.py] as feedback_schema
+    [notification.py] as notification_schema
+    [file.py] as file_schema
+    [event_sponsor.py] as event_sponsor_schema
+}
+
+database "Supabase" {
+    [Users Table] as users_db
+    [Events Table] as events_db
+    [Locations Table] as locations_db
+    [Sponsors Table] as sponsors_db
+    [Registrations Table] as registrations_db
+    [Feedback Table] as feedback_db
+    [Notifications Table] as notifications_db
+    [Files Table] as files_db
+    [Event_Sponsors Table] as event_sponsors_db
+}
+
+' Relationships
+main --> config : uses
+main --> auth : uses
+main --> user_routes : includes
+main --> events_routes : includes
+main --> locations_routes : includes
+main --> sponsors_routes : includes
+main --> registration_routes : includes
+main --> feedback_routes : includes
+main --> notification_routes : includes
+main --> file_routes : includes
+main --> event_sponsor_routes : includes
+
+user_routes --> user_service : uses
+events_routes --> events_service : uses
+locations_routes --> locations_service : uses
+sponsors_routes --> sponsors_service : uses
+registration_routes --> registration_service : uses
+feedback_routes --> feedback_service : uses
+notification_routes --> notification_service : uses
+file_routes --> file_service : uses
+event_sponsor_routes --> event_sponsor_service : uses
+
+user_service --> user_schema : uses
+events_service --> events_schema : uses
+locations_service --> locations_schema : uses
+sponsors_service --> sponsors_schema : uses
+registration_service --> registration_schema : uses
+feedback_service --> feedback_schema : uses
+notification_service --> notification_schema : uses
+file_service --> file_schema : uses
+event_sponsor_service --> event_sponsor_schema : uses
+
+user_service --> users_db : accesses
+events_service --> events_db : accesses
+locations_service --> locations_db : accesses
+sponsors_service --> sponsors_db : accesses
+registration_service --> registrations_db : accesses
+feedback_service --> feedback_db : accesses
+notification_service --> notifications_db : accesses
+file_service --> files_db : accesses
+event_sponsor_service --> event_sponsors_db : accesses
+
+@enduml

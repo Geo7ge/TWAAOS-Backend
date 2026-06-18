@@ -1,0 +1,39 @@
+@startuml Sequence Diagram - User Registration to Event
+
+actor "User" as user
+participant "FastAPI App" as app
+participant "Auth Service" as auth
+participant "Registration Routes" as routes
+participant "Registration Service" as service
+participant "Registration Schema" as schema
+participant "Supabase DB" as db
+
+== Authentication ==
+user -> app: POST /auth/login
+app -> auth: authenticate_user()
+auth -> db: verify credentials
+auth --> app: return token
+app --> user: return JWT token
+
+== Event Registration ==
+user -> app: POST /registrations/ (with token)
+app -> routes: create_registration()
+routes -> auth: verify_token()
+auth --> routes: user authenticated
+
+routes -> service: create_registration()
+service -> schema: validate RegistrationCreate
+schema --> service: validated data
+
+service -> db: INSERT registration
+db --> service: registration created
+
+service --> routes: success response
+routes --> app: success response
+app --> user: registration confirmed
+
+== Notification ==
+service -> db: CREATE notification
+db --> service: notification created
+
+@enduml

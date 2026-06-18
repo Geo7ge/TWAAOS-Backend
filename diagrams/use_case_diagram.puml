@@ -1,0 +1,67 @@
+@startuml Use Case Diagram - TWAAOS System
+
+left to right direction
+
+actor "Student" as Student
+actor "Professor/Organizer" as Organizer
+actor "Administrator" as Admin
+
+rectangle "TWAAOS Event Management System" {
+    usecase "Register Account" as UC1
+    usecase "Login" as UC2
+    usecase "View Events" as UC3
+    usecase "Register for Event" as UC4
+    usecase "View My Registrations" as UC5
+    usecase "Leave Feedback" as UC6
+
+    usecase "Create Event" as UC7
+    usecase "Update Event" as UC8
+    usecase "Manage Locations" as UC9
+    usecase "Manage Sponsors" as UC10
+    usecase "View Event Statistics" as UC11
+    usecase "Manage Registrations" as UC12
+
+    usecase "Manage Users" as UC13
+    usecase "System Administration" as UC14
+    usecase "View System Reports" as UC15
+}
+
+' Student use cases
+Student --> UC1
+Student --> UC2
+Student --> UC3
+Student --> UC4
+Student --> UC5
+Student --> UC6
+
+' Organizer use cases
+Organizer --> UC2
+Organizer --> UC3
+Organizer --> UC7
+Organizer --> UC8
+Organizer --> UC9
+Organizer --> UC10
+Organizer --> UC11
+Organizer --> UC12
+
+' Admin use cases
+Admin --> UC13
+Admin --> UC14
+Admin --> UC15
+
+' Include relationships
+UC4 ..> UC3 : <<include>>
+UC5 ..> UC4 : <<include>>
+UC6 ..> UC4 : <<include>>
+
+UC8 ..> UC7 : <<include>>
+UC12 ..> UC7 : <<include>>
+
+UC14 ..> UC13 : <<include>>
+UC15 ..> UC14 : <<include>>
+
+' Extend relationships
+UC11 ..> UC3 : <<extend>>
+UC10 ..> UC7 : <<extend>>
+
+@enduml
